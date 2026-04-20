@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catálogo de Tecidos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+          <path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M19.07 4.93L4.93 19.07"/>
+        </svg>
+        <div>
+          <h1 class="brand-title">Catálogo de Tecidos</h1>
+          <p class="brand-sub">Linha completa de tecidos técnicos</p>
+        </div>
+      </div>
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input type="search" id="search-input" placeholder="Buscar por nome ou código...">
+      </div>
+    </div>
+
+    <div class="view-tabs">
+      <button class="view-tab active" data-view="fabrics">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        Tecidos
+      </button>
+      <button class="view-tab" data-view="events">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        Eventos
+      </button>
+      <button class="view-tab" data-view="reps">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Representantes
+      </button>
+    </div>
+
+    <div class="filter-bar" id="filter-bar">
+      <div class="filter-chips" id="line-filters"></div>
+      <button class="advanced-toggle" id="advanced-toggle" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 6h18M7 12h10M11 18h2"/>
+        </svg>
+        <span>Filtros avançados</span>
+        <span class="filter-badge hidden" id="filter-badge">0</span>
+      </button>
+    </div>
+
+    <div class="advanced-panel hidden" id="advanced-panel">
+      <div class="advanced-inner">
+        <div class="filter-group">
+          <label class="filter-label">Gramatura (g/m²)</label>
+          <div class="range-row">
+            <input type="number" class="range-input" id="gram-min" placeholder="Mín" min="0">
+            <span class="range-sep">—</span>
+            <input type="number" class="range-input" id="gram-max" placeholder="Máx" min="0">
+            <span class="range-hint" id="gram-hint"></span>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label">Largura (m)</label>
+          <div class="pill-group" id="width-filters"></div>
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label">Ligamento</label>
+          <div class="pill-group" id="ligamento-filters"></div>
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label">Aplicação</label>
+          <div class="pill-group pill-group-scroll" id="application-filters"></div>
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label">Cor (nome ou código)</label>
+          <input type="search" class="text-input" id="color-search" placeholder="Ex: 0001, branco, verde militar...">
+        </div>
+
+        <div class="advanced-actions">
+          <button class="btn-clear" id="clear-filters">Limpar filtros</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="fabrics-view">
+      <div class="results-bar">
+        <span id="results-count"></span>
+      </div>
+      <div class="fabric-grid" id="fabric-grid"></div>
+      <div class="no-results hidden" id="no-results">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <p>Nenhum tecido encontrado com os filtros atuais.</p>
+      </div>
+    </section>
+
+    <section id="reps-view" class="hidden">
+      <div class="reps-wrap">
+        <div class="map-panel">
+          <div class="map-header">
+            <h2 class="map-title">Representantes comerciais</h2>
+            <p class="map-sub">Clique em um estado para ver o representante responsável</p>
+            <div class="region-legend">
+              <span class="legend-item"><span class="legend-dot" data-region="Norte"></span>Norte</span>
+              <span class="legend-item"><span class="legend-dot" data-region="Nordeste"></span>Nordeste</span>
+              <span class="legend-item"><span class="legend-dot" data-region="Centro-Oeste"></span>Centro-Oeste</span>
+              <span class="legend-item"><span class="legend-dot" data-region="Sudeste"></span>Sudeste</span>
+              <span class="legend-item"><span class="legend-dot" data-region="Sul"></span>Sul</span>
+            </div>
+          </div>
+          <div class="brazil-map-wrap">
+            <div id="brazil-map" aria-label="Mapa do Brasil"></div>
+          </div>
+          <div class="map-tooltip hidden" id="map-tooltip"></div>
+        </div>
+
+        <aside class="reps-sidebar">
+          <h3 class="reps-title" id="reps-sidebar-title">Todos os representantes</h3>
+          <div class="reps-list" id="reps-list"></div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="events-view" class="hidden">
+      <div class="calendar-wrap">
+        <div class="calendar">
+          <div class="calendar-header">
+            <button class="cal-nav" id="cal-prev" aria-label="Mês anterior">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <h2 class="cal-title" id="cal-title"></h2>
+            <button class="cal-nav" id="cal-next" aria-label="Próximo mês">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+            <button class="cal-today" id="cal-today">Hoje</button>
+          </div>
+          <div class="cal-weekdays">
+            <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
+          </div>
+          <div class="cal-grid" id="cal-grid"></div>
+        </div>
+
+        <aside class="events-sidebar">
+          <h3 class="events-title">Próximos eventos</h3>
+          <div class="events-list" id="events-list"></div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal-overlay hidden" id="modal-overlay">
+    <div class="modal" role="dialog" aria-modal="true">
+      <button class="modal-close" id="modal-close" aria-label="Fechar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+      <div class="modal-content" id="modal-content"></div>
+    </div>
+  </div>
+
+  <noscript>
+    <div style="padding:2rem;text-align:center;font-family:sans-serif">
+      Este site requer JavaScript para funcionar.
+    </div>
+  </noscript>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
